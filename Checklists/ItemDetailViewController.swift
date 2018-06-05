@@ -1,5 +1,5 @@
 //
-//  AddItemViewController.swift
+//  ItemDetailViewController.swift
 //  Checklists
 //
 //  Created by Kristopher Devlin on 30/05/2018.
@@ -9,13 +9,15 @@
 import UIKit
 
 /* This is the delegate protocol which outlines the functions which will need to be implemented by the delegate. It needs to go outside the main view controller class. */
-protocol AddItemViewControllerDelegate: class {
-    func addItemViewControllerDidCancel(_ controller: ItemDetailViewController)
-    func addItemViewController(_ controller: ItemDetailViewController, didFinishAdding item: ChecklistItem)
-    func addItemViewController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem)
+protocol ItemDetailViewControllerDelegate: class {
+    func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController)
+    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishAdding item: ChecklistItem)
+    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem)
 }
 
-/* This tells Swift that you have a new object for a table view controller that goes by the name of AddItemViewController. */
+/* *********************************************************************************** */
+
+/* This tells Swift that you have a new object for a table view controller that goes by the name of ItemDetailViewController. */
 class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
     
     /* *********************************************************************************** */
@@ -29,7 +31,7 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
 
     /* *********************************************************************************** */
 
-    weak var delegate: AddItemViewControllerDelegate? /* This is the variable which will be used to delegate functions. */
+    weak var delegate: ItemDetailViewControllerDelegate? /* This is the variable which will be used to delegate functions. */
     
     var itemToEdit: ChecklistItem? // This variable contains the existing ChecklistItem object that the user will edit. But when adding a new to-do item, itemToEdit will be nil. That is how the view controller will make the distinction between adding and editing.
 
@@ -66,7 +68,7 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
 
     // Connect the Cancel button on the UI to the code
     @IBAction func cancel() {
-        delegate?.addItemViewControllerDidCancel(self) // Delegate the function
+        delegate?.itemDetailViewControllerDidCancel(self) // Delegate the function
     }
     
     // Connect the Done button on the UI to the code so that it does something when presses (Action)
@@ -75,14 +77,14 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
         // If there is something to edit (which contains a value if the EditItem segue was used to get here)
         if let itemToEdit = itemToEdit {
             itemToEdit.text = textField.text!
-            delegate?.addItemViewController(self, didFinishEditing: itemToEdit) // Delegate the function, returning the newly edited ChecklistItem, held in 'item'
+            delegate?.itemDetailViewController(self, didFinishEditing: itemToEdit) // Delegate the function, returning the newly edited ChecklistItem, held in 'item'
             
         } else {
     
             let item = ChecklistItem() // Create an instance of ChecklistItem
             item.text = textField.text! // Fill the 'text' property as set in 'ChecklistItem' with the text from the text field
             item.checked = false // Fill the 'checked' value as set in 'ChecklistItem'
-            delegate?.addItemViewController(self, didFinishAdding: item) // Delegate the function, returning the newly created ChecklistItem, held in 'item'
+            delegate?.itemDetailViewController(self, didFinishAdding: item) // Delegate the function, returning the newly created ChecklistItem, held in 'item'
         }
     }
     
